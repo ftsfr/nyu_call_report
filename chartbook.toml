@@ -1,0 +1,165 @@
+[config]
+type = "pipeline"
+chartbook_format_version = "0.0.2"
+
+[site]
+title = "NYU Call Report"
+author = "Jeremy Bejarano"
+copyright = "2025"
+logo_path = ""
+favicon_path = ""
+
+[pipeline]
+id = "nyu_call_report"
+pipeline_name = "NYU Call Report"
+pipeline_description = "Bank-level leverage and liquidity metrics from regulatory call reports"
+lead_pipeline_developer = "Jeremiah Bejarano"
+contributors = ["Jeremiah Bejarano"]
+runs_on = "Windows/Linux/MacOS"
+git_repo_URL = "https://github.com/ftsfr/nyu_call_report"
+README_file_path = "./README.md"
+
+[notebooks]
+
+[notebooks.summary_nyu_call_report_ipynb]
+notebook_name = "summary_nyu_call_report_ipynb"
+notebook_description = "Summary statistics and visualization of NYU Call Report data"
+notebook_path = "_output/_notebook_build/summary_nyu_call_report_ipynb.ipynb"
+is_publishable = true
+
+[charts]
+
+[dataframes]
+
+[dataframes.ftsfr_nyu_call_report_leverage]
+dataframe_name = "ftsfr_nyu_call_report_leverage"
+short_description_df = "Bank-level leverage (Assets/Equity) from regulatory call reports"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "leverage", "regulation"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Downloaded from NYU Stern website"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_leverage.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Bank-Level Leverage
+
+This dataset contains quarterly leverage ratios (Total Assets / Total Equity) for individual banks.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Bank identifier (RSSD ID) |
+| ds | Date |
+| y | Leverage ratio (Assets/Equity) |
+
+### Notes
+
+- Data from regulatory call reports (1976-2020)
+- Banks with zero or negative equity are excluded
+"""
+
+[dataframes.ftsfr_nyu_call_report_holding_company_leverage]
+dataframe_name = "ftsfr_nyu_call_report_holding_company_leverage"
+short_description_df = "Bank holding company leverage (Assets/Equity)"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "leverage", "regulation"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Downloaded from NYU Stern website"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_holding_company_leverage.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Holding Company Leverage
+
+Quarterly leverage ratios aggregated at the bank holding company level.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Bank holding company identifier (BHC ID) |
+| ds | Date |
+| y | Leverage ratio (Assets/Equity) |
+"""
+
+[dataframes.ftsfr_nyu_call_report_cash_liquidity]
+dataframe_name = "ftsfr_nyu_call_report_cash_liquidity"
+short_description_df = "Bank-level cash liquidity (Cash/Assets)"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "liquidity", "regulation"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Downloaded from NYU Stern website"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_cash_liquidity.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Bank-Level Cash Liquidity
+
+This dataset contains quarterly cash liquidity ratios (Cash / Total Assets) for individual banks.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Bank identifier (RSSD ID) |
+| ds | Date |
+| y | Cash liquidity ratio (Cash/Assets) |
+"""
+
+[dataframes.ftsfr_nyu_call_report_holding_company_cash_liquidity]
+dataframe_name = "ftsfr_nyu_call_report_holding_company_cash_liquidity"
+short_description_df = "Bank holding company cash liquidity (Cash/Assets)"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "liquidity", "regulation"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Downloaded from NYU Stern website"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_holding_company_cash_liquidity.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Holding Company Cash Liquidity
+
+Quarterly cash liquidity ratios aggregated at the bank holding company level.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Bank holding company identifier (BHC ID) |
+| ds | Date |
+| y | Cash liquidity ratio (Cash/Assets) |
+"""

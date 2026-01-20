@@ -1,0 +1,143 @@
+"""
+This module contains functions to load the datasets.
+It is used to load the datasets into memory.
+
+List of datasets:
+
+- nyu_call_report_leverage: Total assets / Total equity
+- nyu_call_report_holding_company_leverage: Total assets / Total equity
+- nyu_call_report_cash_liquidity: Cash / Total assets
+- nyu_call_report_holding_company_cash_liquidty: Cash flow / Total assets
+"""
+
+import pull_nyu_call_report
+
+import chartbook
+
+BASE_DIR = chartbook.env.get_project_root()
+DATA_DIR = BASE_DIR / "_data"
+
+
+## nyu_call_report_leverage
+df_all = pull_nyu_call_report.load_nyu_call_report(data_dir=DATA_DIR)
+
+# Filter out invalid equity values before division
+print(f"Initial rows: {len(df_all)}")
+df_all_clean = df_all[(df_all["equity"] > 1e-10) & (df_all["assets"] > 0)].copy()
+print(f"After filtering zero/negative equity/assets: {len(df_all_clean)}")
+
+df_all_clean["leverage"] = df_all_clean["assets"] / df_all_clean["equity"]
+
+df = (
+    df_all_clean[["rssdid", "date", "leverage"]]
+    .sort_values(by=["rssdid", "date"])
+    .reset_index(drop=True)
+)
+
+# Additional validation - drop any remaining infinite or NaN values
+df = df.dropna()
+df = df[~df["leverage"].isin([float("inf"), float("-inf")])]
+print(f"Final leverage dataset rows: {len(df)}")
+
+df = df.rename(columns={"rssdid": "unique_id", "date": "ds", "leverage": "y"})
+df.reset_index(drop=True, inplace=True)
+df.to_parquet(DATA_DIR / "ftsfr_nyu_call_report_leverage.parquet")
+
+## nyu_call_report_holding_company_leverage
+# Group by bhcid, sum the assets, equity, and cash to create a dataset at the holding company level
+df_bhc = (
+    df_all[["bhcid", "date", "assets", "equity", "cash"]]
+    .groupby(["bhcid", "date"])
+    .sum()
+)
+df_bhc = df_bhc.reset_index()
+
+# Filter out invalid values before division
+print(f"Holding company initial rows: {len(df_bhc)}")
+df_bhc = df_bhc[(df_bhc["equity"] > 1e-10) & (df_bhc["assets"] > 0)].copy()
+print(f"After filtering zero/negative equity/assets: {len(df_bhc)}")
+
+df_bhc["leverage"] = df_bhc["assets"] / df_bhc["equity"]
+
+df_bhc = df_bhc.rename(columns={"bhcid": "unique_id", "date": "ds", "leverage": "y"})
+# drop values where entity is 0
+df_bhc = df_bhc[df_bhc["unique_id"] != "0"]
+
+# Additional validation - drop any remaining infinite or NaN values
+df_bhc = df_bhc.dropna()
+df_bhc = df_bhc[~df_bhc["y"].isin([float("inf"), float("-inf")])]
+print(f"Final holding company leverage dataset rows: {len(df_bhc)}")
+
+df_bhc = df_bhc[["unique_id", "ds", "y"]].reset_index(drop=True)
+df_bhc.reset_index(drop=True, inplace=True)
+df_bhc.to_parquet(DATA_DIR / "ftsfr_nyu_call_report_holding_company_leverage.parquet")
+
+## nyu_call_report_cash_liquidity
+# Filter out invalid assets values before division
+print(f"Cash liquidity initial rows: {len(df_all)}")
+df_cash_clean = df_all[(df_all["assets"] > 1e-10) & (df_all["cash"] >= 0)].copy()
+print(f"After filtering zero/negative assets or negative cash: {len(df_cash_clean)}")
+
+df_cash_clean["cash_liquidity"] = df_cash_clean["cash"] / df_cash_clean["assets"]
+
+df_bank = (
+    df_cash_clean[["rssdid", "date", "cash_liquidity"]]
+    .sort_values(by=["rssdid", "date"])
+    .reset_index(drop=True)
+)
+
+# Additional validation - drop any remaining infinite or NaN values
+df_bank = df_bank.dropna()
+df_bank = df_bank[~df_bank["cash_liquidity"].isin([float("inf"), float("-inf")])]
+print(f"After basic cleaning: {len(df_bank)}")
+
+# Remove time series with constant values (zero variance) to prevent MASE calculation issues
+df_grouped = df_bank.groupby("rssdid")["cash_liquidity"]
+constant_series = df_grouped.std() == 0
+constant_rssdids = constant_series[constant_series].index.tolist()
+print(f"Found {len(constant_rssdids)} constant series, removing them...")
+
+df_bank = df_bank[~df_bank["rssdid"].isin(constant_rssdids)]
+print(f"Final cash liquidity dataset rows: {len(df_bank)}")
+
+df_bank = df_bank.rename(
+    columns={"rssdid": "unique_id", "date": "ds", "cash_liquidity": "y"}
+)
+df_bank.reset_index(drop=True, inplace=True)
+df_bank.to_parquet(DATA_DIR / "ftsfr_nyu_call_report_cash_liquidity.parquet")
+
+## nyu_call_report_holding_company_cash_liquidity
+df_bhc = (
+    df_all[["bhcid", "date", "cash", "assets"]]
+    .groupby(["bhcid", "date"])
+    .sum()
+    .sort_values(by=["bhcid", "date"])
+    .reset_index()
+)
+
+# Filter out invalid values before division
+print(f"Holding company cash liquidity initial rows: {len(df_bhc)}")
+df_bhc = df_bhc[(df_bhc["assets"] > 1e-10) & (df_bhc["cash"] >= 0)].copy()
+print(f"After filtering zero/negative assets or negative cash: {len(df_bhc)}")
+
+df_bhc["cash_liquidity"] = df_bhc["cash"] / df_bhc["assets"]
+df = df_bhc.rename(columns={"bhcid": "unique_id", "date": "ds", "cash_liquidity": "y"})
+df = df[df["unique_id"] != "0"]
+
+# Additional validation - drop any remaining infinite or NaN values
+df = df.dropna()
+df = df[~df["y"].isin([float("inf"), float("-inf")])]
+print(f"After basic cleaning: {len(df)}")
+
+# Remove time series with constant values (zero variance) to prevent MASE calculation issues
+df_grouped = df.groupby("unique_id")["y"]
+constant_series = df_grouped.std() == 0
+constant_unique_ids = constant_series[constant_series].index.tolist()
+print(f"Found {len(constant_unique_ids)} constant series, removing them...")
+
+df = df[~df["unique_id"].isin(constant_unique_ids)]
+print(f"Final holding company cash liquidity dataset rows: {len(df)}")
+
+df = df[["unique_id", "ds", "y"]].reset_index(drop=True)
+df.reset_index(drop=True, inplace=True)
+df.to_parquet(DATA_DIR / "ftsfr_nyu_call_report_holding_company_cash_liquidity.parquet")
