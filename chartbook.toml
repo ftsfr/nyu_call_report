@@ -24,10 +24,32 @@ README_file_path = "./README.md"
 [notebooks.summary_nyu_call_report_ipynb]
 notebook_name = "summary_nyu_call_report_ipynb"
 notebook_description = "Summary statistics and visualization of NYU Call Report data"
-notebook_path = "_output/_notebook_build/summary_nyu_call_report_ipynb.ipynb"
+notebook_path = "_output/summary_nyu_call_report_ipynb.ipynb"
 is_publishable = true
 
 [charts]
+
+[charts.bank_leverage_replication]
+chart_name = "Bank Leverage from Call Reports"
+short_description_chart = "Bank-level leverage ratios from regulatory call reports following Drechsler et al. (2017)"
+dataframe_id = "ftsfr_nyu_call_report_leverage"
+path_to_html_chart = "./_output/bank_leverage_replication.html"
+path_to_excel_chart = ""
+topic_tags = ["banking", "leverage", "regulation", "replication"]
+past_publications = ["Drechsler, Savov, and Schnabl (2017) - The Deposits Channel of Monetary Policy"]
+chart_docs_str = """
+## Bank Leverage from Call Reports
+
+Quarterly leverage ratios (Assets/Equity) for individual banks.
+
+### Data Source
+
+NYU Stern Call Report data (1976-2020)
+
+### Reference
+
+Drechsler, Savov, and Schnabl (2017)
+"""
 
 [dataframes]
 

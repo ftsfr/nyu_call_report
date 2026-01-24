@@ -32,3 +32,17 @@ The data is publicly available from [NYU Stern](https://pages.stern.nyu.edu/~psc
 - Time period: 1976-2020
 - Frequency: Quarterly
 - Granularity: Individual banks and bank holding companies
+
+## Academic References
+
+### Primary Paper
+
+- **Drechsler, Savov, and Schnabl (2017)** - "The Deposits Channel of Monetary Policy"
+  - Quarterly Journal of Economics
+  - Uses call report data to study bank deposit spreads and monetary policy transmission
+
+### Key Findings
+
+- Deposit spreads increase with the Fed funds rate
+- Market power in deposit markets allows banks to widen spreads
+- The deposits channel provides a new perspective on how monetary policy affects bank lending

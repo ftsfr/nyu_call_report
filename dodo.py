@@ -108,7 +108,7 @@ def task_run_notebooks():
                 f"ipynb-py-convert {pyfile_path} {notebook_path}",
                 jupyter_execute_notebook(notebook_path),
                 jupyter_to_html(notebook_path),
-                mv(notebook_path, OUTPUT_DIR / "_notebook_build"),
+                mv(notebook_path, OUTPUT_DIR),
                 """python -c "import sys; from datetime import datetime; print(f'End """ + notebook + """: {datetime.now()}', file=sys.stderr)" """,
             ],
             "file_dep": [

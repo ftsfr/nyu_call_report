@@ -1,0 +1,21 @@
+# Paper References for NYU Call Report Module
+
+[Drechsler2017]
+title = "The Deposits Channel of Monetary Policy"
+authors = "Itamar Drechsler, Alexi Savov, and Philipp Schnabl"
+year = 2017
+journal = "Quarterly Journal of Economics"
+description = "The paper introduces the 'deposits channel' as a new mechanism through which monetary policy affects the economy."
+empirical_facts = [
+    "Deposit spreads increase with the Fed funds rate, leading to significant deposit outflows.",
+    "The effect of monetary policy on deposit spreads and outflows is stronger in concentrated markets.",
+    "A 100 basis points increase in the Fed funds rate leads to a 14 bps increase in spreads on savings deposits.",
+    "A typical 400 bps Fed hiking cycle is expected to generate a $1.2 trillion outflow of deposits.",
+    "Banks in concentrated markets reduce lending more significantly when the Fed funds rate rises.",
+]
+lessons_learned = [
+    "Market power in deposit markets allows banks to widen spreads without losing deposits to cash when the Fed funds rate rises.",
+    "The deposits channel provides a new perspective on how monetary policy affects the supply of liquid assets and bank lending.",
+    "The deposits channel can explain the strong relationship between the Fed funds rate and the liquidity premium.",
+]
+data_sources = ["Aggregate, bank-level, and branch-level data for the United States", "Call Reports data", "Small business lending data"]
