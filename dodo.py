@@ -81,6 +81,43 @@ def task_format():
     }
 
 
+def task_aggregate():
+    """Create aggregated leverage datasets by size quartiles"""
+    return {
+        "actions": [
+            "python ./src/create_aggregated_leverage.py",
+        ],
+        "targets": [
+            DATA_DIR / "ftsfr_nyu_call_report_leverage_ew_quartile.parquet",
+            DATA_DIR / "ftsfr_nyu_call_report_leverage_vw_quartile.parquet",
+        ],
+        "file_dep": [
+            "./src/create_aggregated_leverage.py",
+            DATA_DIR / "nyu_call_report.parquet",
+        ],
+        "clean": [],
+    }
+
+
+def task_generate_charts():
+    """Generate aggregated leverage charts"""
+    return {
+        "actions": [
+            "python ./src/generate_chart.py",
+        ],
+        "targets": [
+            OUTPUT_DIR / "bank_leverage_ew_quartile.html",
+            OUTPUT_DIR / "bank_leverage_vw_quartile.html",
+        ],
+        "file_dep": [
+            "./src/generate_chart.py",
+            DATA_DIR / "ftsfr_nyu_call_report_leverage_ew_quartile.parquet",
+            DATA_DIR / "ftsfr_nyu_call_report_leverage_vw_quartile.parquet",
+        ],
+        "clean": [],
+    }
+
+
 notebook_tasks = {
     "summary_nyu_call_report_ipynb": {
         "path": "./src/summary_nyu_call_report_ipynb.py",
@@ -129,5 +166,10 @@ def task_generate_pipeline_site():
             "chartbook build -f",
         ],
         "targets": ["docs/index.html"],
-        "file_dep": ["chartbook.toml", *notebook_files],
+        "file_dep": [
+            "chartbook.toml",
+            *notebook_files,
+            OUTPUT_DIR / "bank_leverage_ew_quartile.html",
+            OUTPUT_DIR / "bank_leverage_vw_quartile.html",
+        ],
     }

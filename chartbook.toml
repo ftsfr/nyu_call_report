@@ -29,18 +29,54 @@ is_publishable = true
 
 [charts]
 
-[charts.bank_leverage_replication]
-chart_name = "Bank Leverage from Call Reports"
-short_description_chart = "Bank-level leverage ratios from regulatory call reports following Drechsler et al. (2017)"
-dataframe_id = "ftsfr_nyu_call_report_leverage"
-path_to_html_chart = "./_output/bank_leverage_replication.html"
+[charts.bank_leverage_ew_quartile]
+chart_name = "Bank Leverage by Size Quartile (Equal-Weight)"
+short_description_chart = "Average bank leverage by initial asset size quartile. Each quartile contains 25% of banks by count."
+dataframe_id = "ftsfr_nyu_call_report_leverage_ew_quartile"
+path_to_html_chart = "./_output/bank_leverage_ew_quartile.html"
 path_to_excel_chart = ""
-topic_tags = ["banking", "leverage", "regulation", "replication"]
+topic_tags = ["banking", "leverage", "regulation", "replication", "aggregated"]
 past_publications = ["Drechsler, Savov, and Schnabl (2017) - The Deposits Channel of Monetary Policy"]
 chart_docs_str = """
-## Bank Leverage from Call Reports
+## Bank Leverage by Size Quartile (Equal-Weight)
 
-Quarterly leverage ratios (Assets/Equity) for individual banks.
+Average bank leverage by initial asset size quartile. Each quartile contains 25% of banks by count. Banks are sorted by their initial total assets (first observation) and tracked over time.
+
+### Quartiles
+
+- Q1: Smallest 25% of banks by count
+- Q2: Second smallest 25%
+- Q3: Second largest 25%
+- Q4: Largest 25% of banks by count
+
+### Data Source
+
+NYU Stern Call Report data (1976-2020)
+
+### Reference
+
+Drechsler, Savov, and Schnabl (2017)
+"""
+
+[charts.bank_leverage_vw_quartile]
+chart_name = "Bank Leverage by Size Quartile (Value-Weight)"
+short_description_chart = "Asset-weighted average bank leverage by size quartile. Each quartile contains 25% of total banking assets."
+dataframe_id = "ftsfr_nyu_call_report_leverage_vw_quartile"
+path_to_html_chart = "./_output/bank_leverage_vw_quartile.html"
+path_to_excel_chart = ""
+topic_tags = ["banking", "leverage", "regulation", "replication", "aggregated"]
+past_publications = ["Drechsler, Savov, and Schnabl (2017) - The Deposits Channel of Monetary Policy"]
+chart_docs_str = """
+## Bank Leverage by Size Quartile (Value-Weight)
+
+Asset-weighted average bank leverage by size quartile. Each quartile contains 25% of total banking assets. Banks are sorted by their initial total assets (first observation) and tracked over time. Shows where leverage concentrates in the banking system.
+
+### Quartiles
+
+- Q1: Banks comprising smallest 25% of total assets
+- Q2: Banks comprising next 25% of total assets
+- Q3: Banks comprising next 25% of total assets
+- Q4: Banks comprising largest 25% of total assets
 
 ### Data Source
 
@@ -184,4 +220,81 @@ Quarterly cash liquidity ratios aggregated at the bank holding company level.
 | unique_id | Bank holding company identifier (BHC ID) |
 | ds | Date |
 | y | Cash liquidity ratio (Cash/Assets) |
+"""
+
+[dataframes.ftsfr_nyu_call_report_leverage_ew_quartile]
+dataframe_name = "ftsfr_nyu_call_report_leverage_ew_quartile"
+short_description_df = "Bank leverage aggregated by size quartile (equal-weight)"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "leverage", "regulation", "aggregated"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Aggregated from NYU Stern Call Report data"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_leverage_ew_quartile.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Bank Leverage by Size Quartile (Equal-Weight)
+
+Quarterly leverage ratios aggregated by bank size quartile. Each quartile contains 25% of banks by count.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Quartile identifier (Q1_small_ew, Q2_ew, Q3_ew, Q4_large_ew) |
+| ds | Date |
+| y | Mean leverage ratio (Assets/Equity) for quartile |
+
+### Notes
+
+- Banks are sorted by initial total assets (first observation)
+- Equal-weight: simple mean of leverage ratios within each quartile
+- Q1 = smallest banks, Q4 = largest banks
+"""
+
+[dataframes.ftsfr_nyu_call_report_leverage_vw_quartile]
+dataframe_name = "ftsfr_nyu_call_report_leverage_vw_quartile"
+short_description_df = "Bank leverage aggregated by size quartile (value-weight)"
+data_sources = ["nyu_call_report"]
+data_providers = ["NYU Stern"]
+need_to_contact_provider = ["no"]
+data_on_pre_approved_list = ["No"]
+links_to_data_providers = ["https://pages.stern.nyu.edu/~pschnabl/data/data_callreport.htm"]
+topic_tags = ["banking", "leverage", "regulation", "aggregated"]
+type_of_data_access = ["Public"]
+data_license = "Public"
+license_expiration_date = ""
+provider_contact_info = ""
+restriction_on_use = "No"
+how_is_pulled = "Aggregated from NYU Stern Call Report data"
+path_to_parquet_data = "./_data/ftsfr_nyu_call_report_leverage_vw_quartile.parquet"
+path_to_excel_data = ""
+date_col = "ds"
+dataframe_docs_str = """
+## Bank Leverage by Size Quartile (Value-Weight)
+
+Quarterly leverage ratios aggregated by bank size quartile. Each quartile contains 25% of total banking assets.
+
+### Columns
+
+| Column | Description |
+|--------|-------------|
+| unique_id | Quartile identifier (Q1_small_vw, Q2_vw, Q3_vw, Q4_large_vw) |
+| ds | Date |
+| y | Asset-weighted mean leverage ratio (Assets/Equity) for quartile |
+
+### Notes
+
+- Banks are sorted by initial total assets (first observation)
+- Value-weight: asset-weighted mean of leverage ratios within each quartile
+- Q1 = smallest banks (by cumulative assets), Q4 = largest banks
+- Shows where system-wide leverage concentrates
 """
