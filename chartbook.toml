@@ -11,6 +11,10 @@ os_compatibility = [
     "Linux",
     "MacOS",
 ]
+requires_chartbook = ">=0.3.0"
+
+[scripts]
+build = "doit"
 
 [notebooks.summary_nyu_call_report_ipynb]
 name = "summary_nyu_call_report_ipynb"
