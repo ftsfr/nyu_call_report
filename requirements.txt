@@ -1,13 +1,15 @@
 # Dependencies for this project
 chartbook>=0.5.0
+# Python 3.12: numpy 1.26.4 has no wheels for later Pythons
 doit==0.36.0
 pandas==2.2.3
 numpy==1.26.4
-pyarrow
+pyarrow==20.0.0
 matplotlib==3.9.2
 seaborn==0.13.2
 jupyter
 jupyterlab
+jupytext
 notebook
 ipynb-py-convert
 myst-nb
